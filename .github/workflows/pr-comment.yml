@@ -1,0 +1,36 @@
+name: PR Read-All with Pull Request Write Override and Comment (using action)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions: read-all
+
+jobs:
+  add_pr_comment:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: "Test write"
+          reactions: '+1'
+  add_pr_comment_fail:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: "Test write"
+          reactions: '+1'
